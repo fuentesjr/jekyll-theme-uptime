@@ -1,0 +1,22 @@
+---
+layout: default
+---
+
+<section class="dash-services">
+  <div class="dash-h2">
+    <span>§</span> Tag: <code style="color: var(--accent); text-transform: none; font-size: 13px; margin-left: 0.4rem;">#{{ page.tag }}</code>
+    <span class="dash-h2__aux">{{ page.posts.size }} {% if page.posts.size == 1 %}entry{% else %}entries{% endif %}</span>
+  </div>
+  <div class="dash-table">
+    <div class="dash-table__head">
+      <div>date</div>
+      <div>title</div>
+      <div>read</div>
+      <div>tags</div>
+    </div>
+    {% for post in page.posts %}
+      {% include post-card.html post=post %}
+    {% endfor %}
+  </div>
+  <p style="margin-top: 1.5rem;"><a class="dash-tag" href="{{ '/tags/' | relative_url }}">← all tags</a></p>
+</section>

@@ -1,0 +1,98 @@
+---
+layout: default
+---
+
+<section class="dash-hero">
+  <div class="dash-hero__crumb">services &rsaquo; {{ site.title | downcase | replace: ' ', '-' }} &rsaquo; home</div>
+  <h1 class="dash-hero__headline">
+    {{ site.tagline_html | default: site.tagline | default: "Notes from production." }}
+  </h1>
+  {% if site.description %}
+    <p class="dash-hero__body">{{ site.description }}</p>
+  {% endif %}
+  <div class="dash-hero__links">
+    {% for link in site.social_links %}
+      <a class="dash-link" href="{{ link.href }}"{% unless link.kind == 'email' %} target="_blank" rel="noreferrer"{% endunless %}>
+        <span class="dash-link__k">{{ link.kind }}</span>
+        <span>{{ link.label }}</span>
+        <span class="dash-link__arr">↗</span>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% if site.uptime.now %}
+<aside class="now-banner" aria-label="Currently exploring">
+  <span class="status-dot" style="--dot: var(--warn)"><span class="status-dot__inner"></span></span>
+  <span class="now-banner__k">now</span>
+  <span class="now-banner__body">{{ site.uptime.now.body | truncate: 140 }}</span>
+</aside>
+{% endif %}
+
+{% if site.featured_posts and site.featured_posts.size > 0 %}
+<section class="dash-slis">
+  <div class="dash-h2"><span>§</span> Featured <span class="dash-h2__aux">(pinned by the author)</span></div>
+  <div class="dash-slis__grid">
+    {% for slug in site.featured_posts %}
+      {% assign fp = site.posts | where: "slug", slug | first %}
+      {% if fp %}
+        {% assign age_days = site.time | date: '%s' | minus: fp.date | date: '%s' | divided_by: 86400 %}
+        {% if age_days < 14 %}{% assign age_label = 'new' %}
+        {% elsif age_days < 60 %}{% assign age_label = age_days | append: 'd' %}
+        {% elsif age_days < 730 %}{% assign age_label = age_days | divided_by: 30 | append: 'mo' %}
+        {% else %}{% assign age_label = age_days | divided_by: 365 | append: 'y' %}{% endif %}
+        {% assign spark_seed = fp.date | date: '%j' | modulo: 7 %}
+        <a class="dash-sli" href="{{ fp.url | relative_url }}">
+          <div class="dash-sli__head">
+            <span>POST-{{ fp.date | date: "%y%m%d" }}</span>
+            <span class="dash-sli__age">{{ age_label }}</span>
+          </div>
+          <h3 class="dash-sli__headline">{{ fp.title }}</h3>
+          <div class="dash-sli__desc">{{ fp.excerpt | strip_html | truncate: 110 }}</div>
+          <div class="dash-sli__spark" aria-hidden="true" data-spark="{{ spark_seed }}"></div>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="dash-services" id="posts">
+  <div class="dash-h2">
+    <span>§</span> Posts
+    <span class="dash-h2__aux">{{ site.posts.size }} {% if site.posts.size == 1 %}entry{% else %}entries{% endif %}, most recent first</span>
+  </div>
+  <div class="dash-table">
+    <div class="dash-table__head">
+      <div>date</div>
+      <div>title</div>
+      <div>read</div>
+      <div>tags</div>
+    </div>
+    {% if paginator and paginator.posts %}
+      {% assign post_list = paginator.posts %}
+    {% else %}
+      {% assign post_list = site.posts %}
+    {% endif %}
+    {% for post in post_list %}
+      {% include post-card.html post=post %}
+    {% endfor %}
+  </div>
+
+  {% if paginator and paginator.total_pages > 1 %}
+    <nav class="post-nav" style="margin-top: var(--gap-md);">
+      {% if paginator.previous_page %}
+        <a href="{{ paginator.previous_page_path | relative_url }}">
+          <div class="post-nav__dir">← newer</div>
+          <div class="post-nav__title">Page {{ paginator.previous_page }}</div>
+        </a>
+      {% else %}<div></div>{% endif %}
+      {% if paginator.next_page %}
+        <a class="post-nav__r" href="{{ paginator.next_page_path | relative_url }}">
+          <div class="post-nav__dir">older →</div>
+          <div class="post-nav__title">Page {{ paginator.next_page }}</div>
+        </a>
+      {% endif %}
+    </nav>
+  {% endif %}
+</section>

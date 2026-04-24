@@ -1,0 +1,15 @@
+<footer class="foot">
+  <div class="foot__l">
+    <span class="status-dot"><span class="status-dot__inner"></span></span>
+    <span>all systems nominal</span>
+  </div>
+  <div class="foot__c">
+    © {{ site.time | date: '%Y' }} {{ site.author.name | default: site.title }} · set in Fraunces &amp; Geist Mono
+  </div>
+  <div class="foot__r">
+    {% for link in site.social_links %}
+      <a href="{{ link.href }}"{% unless link.kind == 'email' %} target="_blank" rel="noreferrer"{% endunless %}>{{ link.kind }}</a>
+    {% endfor %}
+    <button class="linklike" type="button" data-action="open-palette" aria-label="Open command palette">⌘K</button>
+  </div>
+</footer>

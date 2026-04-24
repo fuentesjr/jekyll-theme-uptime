@@ -1,0 +1,53 @@
+{% comment %}
+  A single post row, styled as a service-table entry.
+  If front matter has `kind: link` + `external_url`, render as a link-post row
+  (compact, with external arrow and host badge).
+  Params: include post-card.html post=post
+{% endcomment %}
+{% assign p = include.post %}
+{% if p.kind == 'link' and p.external_url %}
+  {% assign host = p.external_url | split: '/' | slice: 2, 1 | first | replace: 'www.', '' %}
+  <a class="dash-row dash-row--link" href="{{ p.external_url }}" target="_blank" rel="noreferrer">
+    <div class="dash-row__sum">
+      <div class="dash-row__cell dash-row__cell--status">
+        <span class="status-dot" style="--dot: var(--muted-dot)"><span class="status-dot__inner"></span></span>
+        <span class="dash-row__st">{{ p.date | date: "%Y-%m-%d" }}</span>
+      </div>
+      <div class="dash-row__cell dash-row__cell--title">
+        <div class="dash-row__title">{{ p.title | escape }}</div>
+      </div>
+      <div class="dash-row__cell dash-row__host">{{ host }}</div>
+    </div>
+  </a>
+{% else %}
+  <a class="dash-row" href="{{ p.url | relative_url }}">
+    <div class="dash-row__sum">
+      <div class="dash-row__cell dash-row__cell--status">
+        <span class="status-dot" style="--dot: var(--ok)"><span class="status-dot__inner"></span></span>
+        <span class="dash-row__st">{{ p.date | date: "%Y-%m-%d" }}</span>
+      </div>
+      <div class="dash-row__cell dash-row__cell--title">
+        <div class="dash-row__title">{{ p.title | escape }}</div>
+        {% if p.excerpt %}
+          <div class="dash-row__co" style="color: var(--muted); font-family: var(--serif); font-style: italic; font-size: 13px;">
+            {{ p.excerpt | strip_html | truncate: 120 }}
+          </div>
+        {% endif %}
+      </div>
+      <div class="dash-row__cell">
+        {% if p.reading_time %}
+          {{ p.reading_time }} min
+        {% else %}
+          {% assign words = p.content | number_of_words %}
+          {% assign mins = words | divided_by: 220 | plus: 1 %}
+          {{ mins }} min
+        {% endif %}
+      </div>
+      <div class="dash-row__cell" style="flex-wrap: wrap; gap: 4px;">
+        {% for tag in p.tags limit: 3 %}
+          <span class="dash-tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  </a>
+{% endif %}

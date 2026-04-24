@@ -1,0 +1,52 @@
+{% if site.uptime.show_command_palette != false %}
+<div id="cmdk" class="cmdk-overlay" hidden role="dialog" aria-label="Command palette">
+  <div class="cmdk" role="document">
+    <div class="cmdk__header">
+      <span class="cmdk__prompt">›</span>
+      <input type="text" class="cmdk__input" placeholder="Type a command or search…" aria-label="Search commands">
+      <span class="cmdk__esc">esc</span>
+    </div>
+    <div class="cmdk__list" role="listbox"></div>
+    <div class="cmdk__footer">
+      <span>↑↓ navigate</span>
+      <span>↵ select</span>
+      <span>esc close</span>
+    </div>
+  </div>
+</div>
+
+<div id="help-overlay" class="help-overlay" hidden role="dialog" aria-label="Keyboard shortcuts">
+  <div class="help" role="document">
+    <div class="help__title">Keyboard</div>
+    <dl class="help__list">
+      <div><dt><kbd>⌘K</kbd> / <kbd>Ctrl K</kbd></dt><dd>Command palette</dd></div>
+      <div><dt><kbd>T</kbd></dt><dd>Toggle theme</dd></div>
+      <div><dt><kbd>D</kbd></dt><dd>Cycle density</dd></div>
+      <div><dt><kbd>?</kbd></dt><dd>This overlay</dd></div>
+      <div><dt><kbd>G</kbd> <kbd>H</kbd></dt><dd>Home</dd></div>
+      <div><dt><kbd>G</kbd> <kbd>A</kbd></dt><dd>About</dd></div>
+      <div><dt><kbd>G</kbd> <kbd>R</kbd></dt><dd>Archive</dd></div>
+      <div><dt><kbd>G</kbd> <kbd>T</kbd></dt><dd>Tags</dd></div>
+      <div><dt><kbd>Esc</kbd></dt><dd>Close anything</dd></div>
+    </dl>
+    <div class="help__foot">{{ site.uptime.footer_note | default: "Built with HTML, serifs, and restraint." }}</div>
+  </div>
+</div>
+
+{% comment %} Collect all unique tags + their counts, for "Jump to #tag" actions. {% endcomment %}
+{% assign all_tags = site.tags | sort %}
+<script id="cmdk-data" type="application/json">
+{
+  "posts": [
+    {% for post in site.posts limit: 60 %}
+    {"title": {{ post.title | jsonify }}, "url": {{ post.url | relative_url | jsonify }}, "date": {{ post.date | date: "%Y-%m-%d" | jsonify }}}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ],
+  "tags": [
+    {% for tag in all_tags %}
+    {"name": {{ tag[0] | jsonify }}, "count": {{ tag[1] | size }}, "url": {{ '/tags/' | append: tag[0] | append: '/' | relative_url | jsonify }}}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}

@@ -1,0 +1,323 @@
+/* Single-post prose. Fraunces body, Geist Mono for headings & meta. */
+
+.post {
+  max-width: var(--post-measure, 68ch);
+  margin: 0 auto;
+}
+html[data-density="compact"]      { --post-measure: 62ch; }
+html[data-density="comfortable"]  { --post-measure: 68ch; }
+html[data-density="spacious"]     { --post-measure: 72ch; }
+
+/* Full-bleed figures break out of the measure up to the app width.
+   Usage: <figure class="fullbleed"><img src="..." /><figcaption>...</figcaption></figure> */
+.post__body .fullbleed {
+  width: min(1120px, calc(100vw - 3rem));
+  margin-left: 50%;
+  transform: translateX(-50%);
+  max-width: none;
+}
+.post__body .fullbleed img { width: 100%; border-radius: 10px; }
+
+.post__header { margin-bottom: var(--gap-md); }
+.post__meta {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.post__meta code { color: var(--accent); text-transform: none; letter-spacing: 0; }
+
+.post__title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(2.25rem, 4.5vw, 3.4rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0 0 0.5rem;
+  text-wrap: balance;
+}
+.post__subtitle {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-2);
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  margin: 0 0 1.25rem;
+  max-width: 58ch;
+  text-wrap: pretty;
+}
+
+.post__byline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px dashed var(--hairline);
+  border-bottom: 1px dashed var(--hairline);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-bottom: var(--gap-md);
+}
+.post__byline strong { color: var(--ink-2); font-weight: 500; }
+.post__byline-r { margin-left: auto; color: var(--muted); display: flex; gap: 0.5rem; align-items: center; font-variant-numeric: tabular-nums; }
+
+/* Prose body (applied to content rendered from markdown) */
+.post__body {
+  font-family: var(--serif);
+  font-size: 1.075rem;
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+.post__body > p,
+.post__body > ul,
+.post__body > ol,
+.post__body > blockquote,
+.post__body > pre,
+.post__body > figure {
+  margin: 0 0 1.15em;
+  text-wrap: pretty;
+}
+
+/* Drop cap: opt out with `dropcap: false` in front matter (adds .no-dropcap to .post).
+   Also auto-skipped for very short posts (.post__body[data-short]). */
+.post:not(.no-dropcap) .post__body:not([data-short]) > p:first-child::first-letter,
+.post__body > .dropcap::first-letter {
+  font-size: 3.6em;
+  font-weight: 500;
+  float: left;
+  line-height: 0.9;
+  margin: 0.05em 0.1em 0 -0.02em;
+  color: var(--accent);
+  font-family: var(--serif);
+}
+
+/* Headings inside markdown body — revert to Geist/§ style */
+.post__body h2,
+.post__body h3,
+.post__body h4 {
+  font-family: var(--mono);
+  font-weight: 500;
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+  margin: 2.25em 0 0.6em;
+  position: relative;
+}
+.post__body h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--ink);
+}
+.post__body h2::before {
+  content: "§ ";
+  color: var(--accent);
+}
+.post__body h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.post__body h4 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.1em;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.post__body a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.12s;
+}
+.post__body a:hover { color: var(--accent); }
+
+.post__body strong { font-weight: 600; color: var(--ink); }
+.post__body em { font-style: italic; }
+
+.post__body blockquote {
+  border-left: 2px solid var(--accent);
+  padding: 0.1em 0 0.1em 1.25em;
+  margin-left: 0;
+  font-style: italic;
+  color: var(--ink-2);
+}
+.post__body blockquote p:last-child { margin-bottom: 0; }
+
+.post__body ul, .post__body ol { padding-left: 1.5em; }
+.post__body li { margin-bottom: 0.35em; }
+.post__body li::marker { color: var(--muted); }
+
+.post__body hr {
+  border: 0;
+  height: 1px;
+  background: var(--hairline);
+  margin: 2.5em 0;
+  position: relative;
+}
+.post__body hr::after {
+  content: "§";
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg);
+  padding: 0 0.75em;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+/* Inline code + code blocks */
+.post__body code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--tag-bg);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--ink);
+}
+.post__body pre {
+  background: var(--bg-elev);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: var(--mono);
+}
+.post__body pre code {
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  color: var(--ink);
+}
+
+/* Images + figures */
+.post__body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--hairline);
+  display: block;
+  margin: 1em auto;
+}
+.post__body figure { margin: 1.5em 0; }
+.post__body figcaption {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 0.5em;
+  letter-spacing: 0.02em;
+}
+
+/* Tables */
+.post__body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 1.5em 0;
+  font-family: var(--sans);
+}
+.post__body th, .post__body td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--hairline);
+  text-align: left;
+}
+.post__body th {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* Post footer — tags, prev/next, signature */
+.post__footer {
+  margin-top: var(--gap-lg);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--hairline);
+}
+.post__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.post__sig {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+  padding: 1rem 0;
+  border-bottom: 1px dashed var(--hairline);
+  margin-bottom: 1rem;
+}
+.post__sig code { color: var(--accent); }
+
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.post-nav a {
+  display: block;
+  padding: 14px 16px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: border-color 0.15s;
+  background: var(--bg-elev);
+}
+.post-nav a:hover { border-color: var(--accent); }
+.post-nav__dir {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+.post-nav__title {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--ink);
+}
+.post-nav__r { text-align: right; }
+
+@media (max-width: 640px) {
+  .post-nav { grid-template-columns: 1fr; }
+  .post-nav__r { text-align: left; }
+}
+
+/* Reading progress — subtle glow on the left edge of the viewport. */
+.read-progress {
+  position: fixed;
+  top: 0; left: 0;
+  width: 3px;
+  height: var(--read-pct, 0%);
+  background: linear-gradient(to bottom,
+    color-mix(in oklch, var(--accent) 90%, transparent),
+    color-mix(in oklch, var(--accent) 30%, transparent));
+  box-shadow: 0 0 12px 2px color-mix(in oklch, var(--accent) 35%, transparent);
+  z-index: 30;
+  transition: height 0.08s linear;
+  pointer-events: none;
+}
+.read-progress[hidden] { display: none; }

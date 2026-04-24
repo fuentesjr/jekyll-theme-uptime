@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-density="comfortable">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Preview — jekyll-theme-uptime</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+/* ── Tokens — mirror _sass/uptime/_tokens.scss ────────────────────────── */
+:root {
+  --sans: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --accent-hue: 55;
+  --bg: oklch(98.5% 0.006 80);
+  --bg-elev: oklch(100% 0 0);
+  --ink: oklch(22% 0.012 70);
+  --ink-2: oklch(38% 0.012 70);
+  --muted: oklch(55% 0.010 70);
+  --muted-dot: oklch(70% 0.010 70);
+  --hairline: oklch(88% 0.008 70);
+  --accent: oklch(70% 0.17 var(--accent-hue));
+  --accent-2: oklch(48% 0.09 155);
+  --ok: oklch(62% 0.14 155);
+  --warn: oklch(70% 0.14 75);
+  --tag-bg: oklch(94% 0.010 70);
+  --tag-ink: oklch(38% 0.012 70);
+  --shadow-md: 0 1px 2px oklch(0% 0 0 / 0.04), 0 8px 24px oklch(0% 0 0 / 0.06);
+  --gap-lg: 3.5rem; --gap-md: 2rem; --gap-sm: 1rem; --line: 1.6; --text: 17px;
+}
+html[data-density="compact"]    { --gap-lg: 2.25rem; --gap-md: 1.25rem; --line: 1.5;  --text: 15.5px; --post-measure: 62ch; }
+html[data-density="comfortable"]{ --gap-lg: 3.5rem;  --gap-md: 2rem;    --line: 1.6;  --text: 17px;   --post-measure: 68ch; }
+html[data-density="spacious"]   { --gap-lg: 5.5rem;  --gap-md: 3rem;    --line: 1.75; --text: 18.5px; --post-measure: 72ch; }
+html[data-theme="dark"] {
+  --bg: oklch(16% 0.010 260);
+  --bg-elev: oklch(20% 0.012 260);
+  --ink: oklch(94% 0.010 80);
+  --ink-2: oklch(80% 0.010 80);
+  --muted: oklch(62% 0.010 80);
+  --muted-dot: oklch(45% 0.010 260);
+  --hairline: oklch(28% 0.014 260);
+  --accent: oklch(74% 0.14 var(--accent-hue));
+  --accent-2: oklch(72% 0.12 155);
+  --ok: oklch(72% 0.15 155);
+  --warn: oklch(80% 0.14 75);
+  --tag-bg: oklch(24% 0.014 260);
+  --tag-ink: oklch(80% 0.010 80);
+  --shadow-md: 0 1px 2px oklch(0% 0 0 / 0.3), 0 8px 24px oklch(0% 0 0 / 0.35);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: var(--text); line-height: var(--line); transition: background-color .25s, color .25s; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+code { font-family: var(--mono); font-size: 0.9em; }
+.status-dot { display: inline-grid; place-items: center; width: 10px; height: 10px; border-radius: 999px; background: color-mix(in oklch, var(--dot, var(--ok)) 24%, transparent); }
+.status-dot__inner { width: 6px; height: 6px; border-radius: 999px; background: var(--dot, var(--ok)); animation: pulse 2.4s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+.app { max-width: 1120px; margin: 0 auto; padding: clamp(1.25rem, 2vw, 2.5rem) clamp(1.25rem, 3vw, 3rem); }
+
+/* Corner */
+.corner { position: fixed; top: 20px; right: 20px; z-index: 40; display: none; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.corner button { background: var(--bg-elev); border: 1px solid var(--hairline); color: var(--ink-2); border-radius: 8px; padding: 6px 10px; cursor: pointer; font: inherit; transition: border-color .15s; }
+.corner button:hover { border-color: var(--ink-2); }
+
+/* Dashboard top bar */
+.dash-top { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--hairline); margin-bottom: var(--gap-md); flex-wrap: wrap; gap: 1rem; }
+.dash-top__brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+.dash-logo { width: 40px; height: 40px; display: grid; place-items: center; background: var(--ink); color: var(--bg); font-size: 20px; border-radius: 10px; transition: transform .15s; }
+.dash-top__brand:hover .dash-logo { transform: rotate(-6deg); }
+.dash-top__name { font-weight: 600; font-size: 15px; }
+.dash-top__sub { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); flex-wrap: wrap; }
+.dash-sep { opacity: 0.5; }
+.dash-top__right { display: flex; gap: 14px; }
+.dash-kv { display: flex; flex-direction: column; font-family: var(--mono); font-size: 11px; text-align: right; }
+.dash-kv__k { color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.dash-kv__v { color: var(--ink); font-size: 13px; }
+.uptime { color: var(--accent-2); font-variant-numeric: tabular-nums; }
+
+/* Nav */
+.dash-nav { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0 0.75rem; font-family: var(--mono); font-size: 12px; border-bottom: 1px solid var(--hairline); margin-bottom: var(--gap-md); flex-wrap: wrap; gap: 0.5rem; }
+.dash-nav__links { display: flex; gap: 1.25rem; }
+.dash-nav__links a { text-decoration: none; color: var(--muted); transition: color .15s; }
+.dash-nav__links a:hover, .dash-nav__links a.is-active { color: var(--accent); }
+.dash-nav__crumb { color: var(--muted); }
+.dash-nav__crumb code { color: var(--accent); }
+
+/* Hero */
+.dash-hero { padding: var(--gap-md) 0; border-bottom: 1px solid var(--hairline); margin-bottom: var(--gap-md); }
+.dash-hero__crumb { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 1rem; letter-spacing: 0.04em; }
+.dash-hero__headline { font-family: var(--sans); font-weight: 600; font-size: clamp(2rem, 4.5vw, 3.6rem); line-height: 1.05; letter-spacing: -0.025em; margin: 0 0 1.25rem; text-wrap: balance; max-width: 22ch; }
+.dash-hero__accent { color: var(--accent); font-family: var(--serif); font-style: italic; font-weight: 400; }
+.dash-hero__body { font-size: 15px; line-height: 1.6; color: var(--ink-2); max-width: 56ch; margin: 0 0 1.5rem; text-wrap: pretty; }
+.dash-hero__links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.dash-link { display: inline-flex; align-items: center; gap: 8px; padding: 7px 11px; border: 1px solid var(--hairline); border-radius: 8px; background: var(--bg-elev); text-decoration: none; font-size: 12.5px; color: var(--ink-2); transition: all .15s; font-family: var(--mono); }
+.dash-link:hover { border-color: var(--accent); color: var(--ink); transform: translateY(-1px); }
+.dash-link__k { color: var(--muted); font-size: 11px; }
+.dash-link__arr { font-size: 10px; color: var(--muted); }
+
+/* Now banner — compact status-line above featured */
+.now-banner { display: flex; align-items: center; gap: 14px; padding: 10px 14px; margin-bottom: var(--gap-md); background: var(--bg-elev); border: 1px solid var(--hairline); border-left: 3px solid var(--warn); border-radius: 8px; font-family: var(--mono); font-size: 12px; color: var(--ink-2); flex-wrap: wrap; }
+.now-banner__k { color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-size: 10.5px; }
+.now-banner__body { flex: 1; min-width: 200px; font-family: var(--serif); font-style: italic; font-size: 14px; color: var(--ink); }
+/* Section heading */
+.dash-h2 { display: flex; align-items: baseline; gap: 0.5rem; font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 1.25rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--hairline); }
+.dash-h2 > span:first-child { color: var(--accent); }
+.dash-h2__aux { color: var(--muted); font-size: 11px; text-transform: none; letter-spacing: 0; font-style: italic; margin-left: auto; }
+
+/* Featured tiles — differentiated: serif headline + age badge + sparkline */
+.dash-slis { margin-bottom: var(--gap-lg); }
+.dash-slis__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+.dash-sli { background: var(--bg-elev); border: 1px solid var(--hairline); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 10px; transition: border-color .15s; text-decoration: none; color: inherit; }
+.dash-sli:hover { border-color: var(--accent); }
+.dash-sli__head { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; color: var(--muted); }
+.dash-sli__age { font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em; color: var(--muted); padding: 2px 6px; border: 1px solid var(--hairline); border-radius: 4px; text-transform: uppercase; }
+.dash-sli__headline { font-family: var(--serif); font-weight: 500; font-size: 1.15rem; line-height: 1.2; color: var(--ink); letter-spacing: -0.005em; text-wrap: balance; margin: 0; }
+.dash-sli__desc { font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+
+/* Featured log-line block — 2 lines, mono terminal */
+.dash-sli__log { margin-top: auto; font-family: var(--mono); font-size: 10.5px; line-height: 1.55; color: var(--ink-2); background: color-mix(in oklch, var(--bg) 60%, transparent); border: 1px solid var(--hairline); border-radius: 4px; padding: 8px 10px; white-space: pre; overflow: hidden; letter-spacing: 0; font-variant-numeric: tabular-nums; position: relative; }
+.dash-sli__log::before { content: "$ tail -f post.log"; display: block; color: var(--muted); font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; border-bottom: 1px dashed var(--hairline); padding-bottom: 5px; }
+.dash-sli__log .t { color: var(--muted); }
+.dash-sli__log .lv-i { color: var(--accent); }
+.dash-sli__log .lv-o { color: color-mix(in oklch, var(--ink) 70%, transparent); }
+.dash-sli__log .lv-w { color: color-mix(in oklch, var(--accent) 80%, var(--ink)); }
+.dash-sli__log .n { color: var(--ink); font-weight: 500; }
+.dash-sli__log .k { color: var(--muted); }
+
+/* Services table */
+.dash-services { margin-bottom: var(--gap-lg); }
+.dash-table { border: 1px solid var(--hairline); border-radius: 10px; overflow: hidden; background: var(--bg-elev); }
+.dash-table__head, .dash-row__sum { display: grid; grid-template-columns: 110px 1.8fr 1fr 1.2fr; align-items: center; padding: 10px 14px; gap: 1rem; }
+.dash-table__head { background: color-mix(in oklch, var(--bg) 50%, transparent); border-bottom: 1px solid var(--hairline); font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.dash-row { border-bottom: 1px solid var(--hairline); text-decoration: none; color: inherit; display: block; transition: background .12s; }
+.dash-row:last-child { border-bottom: 0; }
+.dash-row:hover { background: color-mix(in oklch, var(--accent) 4%, transparent); }
+.dash-row__sum { font-size: 13.5px; cursor: pointer; padding: 14px; }
+.dash-row__cell { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--ink-2); min-width: 0; }
+.dash-row__cell--title { flex-direction: column; align-items: flex-start; gap: 2px; font-family: var(--sans); }
+.dash-row__title { font-size: 14px; font-weight: 600; color: var(--ink); text-wrap: balance; }
+.dash-row__co { color: var(--muted); font-family: var(--serif); font-style: italic; font-size: 13px; }
+.dash-row__st { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+
+/* Density: compact rows drop the excerpt and tighten padding */
+html[data-density="compact"] .dash-row__cell--title .dash-row__co { display: none; }
+html[data-density="compact"] .dash-row__sum { padding: 7px 14px; }
+html[data-density="spacious"] .dash-row__sum { padding: 18px 14px; }
+
+/* Link-post row — compact with external arrow */
+.dash-row--link .dash-row__sum { grid-template-columns: 110px 1fr auto; }
+.dash-row--link .dash-row__title { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--ink-2); }
+.dash-row--link .dash-row__title::before { content: "→ "; color: var(--accent); font-family: var(--mono); font-style: normal; }
+.dash-row--link .dash-row__host { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.02em; white-space: nowrap; }
+.dash-row--link .dash-row__host::after { content: " ↗"; color: var(--accent); }
+
+.dash-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.03em; color: var(--muted); padding: 2px 8px; border-radius: 999px; background: var(--tag-bg); text-decoration: none; display: inline-block; }
+.dash-tag:hover { color: var(--accent); }
+
+/* Post */
+.post { max-width: var(--post-measure, 68ch); margin: 0 auto; }
+.post__header { margin-bottom: var(--gap-md); }
+.post__meta { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+.post__meta code { color: var(--accent); text-transform: none; letter-spacing: 0; }
+.post__title { font-family: var(--serif); font-weight: 500; font-size: clamp(2.25rem, 4.5vw, 3.4rem); letter-spacing: -0.02em; line-height: 1.05; margin: 0 0 0.5rem; text-wrap: balance; }
+.post__subtitle { font-family: var(--serif); font-style: italic; color: var(--ink-2); font-size: 1.15rem; margin: 0 0 1.25rem; max-width: 58ch; }
+.post__byline { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0; border-top: 1px dashed var(--hairline); border-bottom: 1px dashed var(--hairline); font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-bottom: var(--gap-md); }
+.post__byline strong { color: var(--ink-2); font-weight: 500; }
+.post__byline-r { margin-left: auto; color: var(--muted); display: flex; gap: 0.5rem; align-items: center; font-variant-numeric: tabular-nums; }
+.post__body { font-family: var(--serif); font-size: 1.075rem; line-height: 1.65; color: var(--ink); }
+.post__body > p, .post__body > ul, .post__body > ol, .post__body > blockquote, .post__body > pre, .post__body > figure { margin: 0 0 1.15em; text-wrap: pretty; }
+.post:not(.no-dropcap) .post__body:not([data-short]) > p:first-of-type::first-letter { font-size: 3.6em; font-weight: 500; float: left; line-height: 0.9; margin: 0.05em 0.1em 0 -0.02em; color: var(--accent); font-family: var(--serif); }
+.post__body h2 { font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink); margin: 2.25em 0 0.6em; padding-bottom: 0.5em; border-bottom: 1px solid var(--hairline); }
+.post__body h2::before { content: "§ "; color: var(--accent); }
+.post__body h3 { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin: 2em 0 0.5em; }
+.post__body a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.post__body a:hover { color: var(--accent); }
+.post__body blockquote { border-left: 2px solid var(--accent); padding: 0.1em 0 0.1em 1.25em; margin-left: 0; font-style: italic; color: var(--ink-2); }
+.post__body code { font-family: var(--mono); font-size: 0.88em; background: var(--tag-bg); padding: 1px 6px; border-radius: 4px; color: var(--ink); }
+.post__body pre { background: var(--bg-elev); border: 1px solid var(--hairline); border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 13px; line-height: 1.55; font-family: var(--mono); }
+.post__body pre code { background: transparent; padding: 0; font-size: inherit; }
+.post__body hr { border: 0; height: 1px; background: var(--hairline); margin: 2.5em 0; position: relative; }
+.post__body hr::after { content: "§"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: var(--bg); padding: 0 0.75em; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+.post__body .fullbleed { width: min(1120px, calc(100vw - 3rem)); margin-left: 50%; transform: translateX(-50%); max-width: none; }
+.post__body .fullbleed .figbox { height: 220px; border: 1px solid var(--hairline); border-radius: 10px; background: var(--bg-elev); position: relative; overflow: hidden; padding: 18px 22px; }
+.post__body .fullbleed .figbox__hd { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.post__body .fullbleed .figbox__val { font-family: var(--serif); font-size: 1.5rem; color: var(--ink); font-weight: 500; letter-spacing: -0.01em; }
+.post__body .fullbleed .figbox__val small { font-family: var(--mono); font-size: 11px; color: var(--ok); margin-left: 6px; letter-spacing: 0.04em; }
+.post__body .fullbleed .figbox__chart { position: absolute; left: 0; right: 0; bottom: 0; height: 72%; }
+.post__body .fullbleed .figbox__chart svg { width: 100%; height: 100%; display: block; }
+.post__body figcaption { font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: center; margin-top: 0.5em; letter-spacing: 0.02em; }
+
+/* Copy-code */
+.code-wrap { position: relative; }
+.code-wrap .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg); border: 1px solid var(--hairline); color: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; cursor: pointer; opacity: 0; transition: opacity .15s, color .15s, border-color .15s; }
+.code-wrap:hover .copy-btn, .code-wrap .copy-btn:focus { opacity: 1; }
+.code-wrap .copy-btn:hover { color: var(--ink); border-color: var(--ink-2); }
+.code-wrap .copy-btn.is-done { color: var(--ok); border-color: var(--ok); opacity: 1; }
+.hl-k { color: var(--accent); } .hl-s { color: oklch(72% 0.10 155); } .hl-c { color: var(--muted); font-style: italic; } .hl-n { color: oklch(78% 0.10 200); } .hl-m { color: var(--accent-2); }
+
+.post__footer { margin-top: var(--gap-lg); padding-top: var(--gap-md); border-top: 1px solid var(--hairline); }
+.post__tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+.post__sig { font-family: var(--mono); font-size: 11.5px; color: var(--muted); padding: 1rem 0; border-bottom: 1px dashed var(--hairline); margin-bottom: 1rem; }
+.post__sig code { color: var(--accent); }
+.post-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+.post-nav a { display: block; padding: 14px 16px; border: 1px solid var(--hairline); border-radius: 10px; text-decoration: none; background: var(--bg-elev); transition: border-color .15s; }
+.post-nav a:hover { border-color: var(--accent); }
+.post-nav__dir { font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.25rem; }
+.post-nav__title { font-family: var(--serif); font-size: 15px; color: var(--ink); }
+.post-nav__r { text-align: right; }
+
+/* Footer */
+.foot { margin: var(--gap-lg) auto 2rem; max-width: 1120px; padding: 1.25rem clamp(1.25rem, 3vw, 3rem); border-top: 1px solid var(--hairline); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-family: var(--mono); font-size: 11.5px; color: var(--muted); gap: 1rem; }
+.foot__l { display: flex; align-items: center; gap: 8px; }
+.foot__c { text-align: center; }
+.foot__r { text-align: right; display: flex; gap: 12px; justify-content: flex-end; align-items: center; }
+.foot a, .foot button { color: inherit; text-decoration: none; background: none; border: 0; font: inherit; cursor: pointer; }
+.foot a:hover, .foot button:hover { color: var(--ink); }
+
+/* Preview switcher */
+.preview-switcher { position: fixed; bottom: 16px; left: 16px; z-index: 50; background: var(--bg-elev); border: 1px solid var(--hairline); border-radius: 10px; padding: 10px 12px; font-family: var(--mono); font-size: 11px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; max-width: calc(100vw - 32px); box-shadow: var(--shadow-md); }
+.preview-switcher button { background: var(--tag-bg); border: 0; color: var(--muted); padding: 5px 10px; border-radius: 6px; font: inherit; cursor: pointer; }
+.preview-switcher button.is-on { background: var(--accent); color: var(--bg); }
+.preview-switcher .sep { color: var(--muted); opacity: 0.5; }
+.preview-switcher label { display: flex; align-items: center; gap: 6px; color: var(--muted); }
+.preview-switcher input[type="range"] { width: 90px; accent-color: var(--accent); }
+.preview-switcher .pv-k { color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* Left-edge reading progress — glow, not hairline at top */
+.read-progress { position: fixed; top: 0; left: 0; width: 3px; height: var(--read-pct, 0%); background: linear-gradient(to bottom, color-mix(in oklch, var(--accent) 90%, transparent), color-mix(in oklch, var(--accent) 30%, transparent)); box-shadow: 0 0 12px 2px color-mix(in oklch, var(--accent) 35%, transparent); z-index: 30; transition: height .08s linear; pointer-events: none; }
+  </style>
+</head>
+<body>
+<div class="read-progress" hidden></div>
+
+<div class="corner">
+  <button type="button" id="theme-btn" title="Toggle theme">☀</button>
+</div>
+
+<main class="app" id="main">
+  <header class="dash-top">
+    <a class="dash-top__brand" href="#">
+      <div class="dash-logo">◉</div>
+      <div>
+        <div class="dash-top__name">Salvador Fuentes Jr.</div>
+        <div class="dash-top__sub">
+          <span class="status-dot" style="--dot: var(--ok)"><span class="status-dot__inner"></span></span>
+          <span>writing from production</span>
+          <span class="dash-sep">/</span>
+          <span>Irvine, CA</span>
+        </div>
+      </div>
+    </a>
+    <div class="dash-top__right">
+      <div class="dash-kv"><span class="dash-kv__k">uptime</span><span class="dash-kv__v"><span class="uptime" data-uptime-since="2010-03-01">…</span></span></div>
+      <div class="dash-kv"><span class="dash-kv__k">region</span><span class="dash-kv__v">us-west-1</span></div>
+    </div>
+  </header>
+
+  <nav class="dash-nav">
+    <div class="dash-nav__links">
+      <a href="#" class="is-active">posts</a>
+      <a href="#">archive</a>
+      <a href="#">tags</a>
+      <a href="#">about</a>
+      <a href="#">rss</a>
+    </div>
+    <div class="dash-nav__crumb">services &rsaquo; <code id="crumb">/</code></div>
+  </nav>
+
+  <!-- ── HOME ──────────────────────────────────────────────────────── -->
+  <div id="view-home">
+    <section class="dash-hero">
+      <div class="dash-hero__crumb">services &rsaquo; blog &rsaquo; home</div>
+      <h1 class="dash-hero__headline">Notes from production, <span class="dash-hero__accent">with a smile.</span></h1>
+      <p class="dash-hero__body">Senior software engineer. 15+ years on backend platforms, billing, and production incident response. Exploring agentic engineering as a force multiplier for human focus and productivity.</p>
+      <div class="dash-hero__links">
+        <a class="dash-link" href="#"><span class="dash-link__k">site</span><span>fuentesjr.dev</span><span class="dash-link__arr">↗</span></a>
+        <a class="dash-link" href="#"><span class="dash-link__k">github</span><span>fuentesjr</span><span class="dash-link__arr">↗</span></a>
+        <a class="dash-link" href="#"><span class="dash-link__k">linkedin</span><span>in/fuentesjr</span><span class="dash-link__arr">↗</span></a>
+        <a class="dash-link" href="#"><span class="dash-link__k">email</span><span>fuentesjr@gmail.com</span><span class="dash-link__arr">↗</span></a>
+      </div>
+    </section>
+
+    <aside class="now-banner" aria-label="Currently exploring">
+      <span class="status-dot" style="--dot: var(--warn)"><span class="status-dot__inner"></span></span>
+      <span class="now-banner__k">now</span>
+      <span class="now-banner__body">Agentic engineering workflows — using Claude Code &amp; Codex to amplify focus and ship more.</span>
+    </aside>
+
+    <section class="dash-slis">
+      <div class="dash-h2"><span>§</span> Featured <span class="dash-h2__aux">(pinned by the author)</span></div>
+      <div class="dash-slis__grid">
+        <a class="dash-sli" href="#post">
+          <div class="dash-sli__head"><span>POST-260420</span><span class="dash-sli__age">new</span></div>
+          <h3 class="dash-sli__headline">On watching the billing graph during a launch</h3>
+          <div class="dash-sli__desc">The first $10M of ARR moves differently than the second.</div>
+<pre class="dash-sli__log"><span class="t">2026-04-20 20:14</span> <span class="lv-i">INFO </span> published <span class="k">len=</span><span class="n">2,140w</span>
+<span class="t">2026-04-22 22:08</span> <span class="lv-o">STAT </span> reads <span class="k">7d=</span><span class="n">1,284</span></pre>
+        </a>
+        <a class="dash-sli" href="#">
+          <div class="dash-sli__head"><span>POST-260328</span><span class="dash-sli__age">26d</span></div>
+          <h3 class="dash-sli__headline">Outrunning MySQL with gh-ost</h3>
+          <div class="dash-sli__desc">Extending an 8-month runway on a hot-write table.</div>
+<pre class="dash-sli__log"><span class="t">2026-03-28 09:12</span> <span class="lv-i">INFO </span> published <span class="k">len=</span><span class="n">3,460w</span>
+<span class="t">2026-04-19 00:00</span> <span class="lv-o">STAT </span> reads <span class="k">7d=</span><span class="n">3,416</span></pre>
+        </a>
+        <a class="dash-sli" href="#">
+          <div class="dash-sli__head"><span>POST-260312</span><span class="dash-sli__age">1mo</span></div>
+          <h3 class="dash-sli__headline">Claude Code, six months in</h3>
+          <div class="dash-sli__desc">Where it shines, where it slips.</div>
+<pre class="dash-sli__log"><span class="t">2026-03-12 17:40</span> <span class="lv-i">INFO </span> published <span class="k">len=</span><span class="n">4,820w</span>
+<span class="t">2026-04-19 00:00</span> <span class="lv-o">STAT </span> reads <span class="k">7d=</span><span class="n">5,902</span></pre>
+        </a>
+      </div>
+    </section>
+
+    <section class="dash-services">
+      <div class="dash-h2"><span>§</span> Posts <span class="dash-h2__aux" id="row-aux">6 entries · comfortable density</span></div>
+      <div class="dash-table">
+        <div class="dash-table__head"><div>date</div><div>title</div><div>read</div><div>tags</div></div>
+
+        <a class="dash-row" href="#post">
+          <div class="dash-row__sum">
+            <div class="dash-row__cell"><span class="status-dot" style="--dot: var(--ok)"><span class="status-dot__inner"></span></span><span class="dash-row__st">2026-04-20</span></div>
+            <div class="dash-row__cell dash-row__cell--title">
+              <div class="dash-row__title">On watching the billing graph during a launch</div>
+              <div class="dash-row__co">The first $10M of ARR moves differently than the second.</div>
+            </div>
+            <div class="dash-row__cell">6 min</div>
+            <div class="dash-row__cell" style="flex-wrap: wrap; gap: 4px;"><span class="dash-tag">billing</span><span class="dash-tag">copilot</span><span class="dash-tag">sre</span></div>
+          </div>
+        </a>
+
+        <!-- Link-post row -->
+        <a class="dash-row dash-row--link" href="#" target="_blank" rel="noreferrer">
+          <div class="dash-row__sum">
+            <div class="dash-row__cell"><span class="status-dot" style="--dot: var(--muted-dot)"><span class="status-dot__inner"></span></span><span class="dash-row__st">2026-04-02</span></div>
+            <div class="dash-row__cell dash-row__cell--title">
+              <div class="dash-row__title">The best paper on distributed transactions I've read this year</div>
+            </div>
+            <div class="dash-row__cell dash-row__host">arxiv.org</div>
+          </div>
+        </a>
+
+        <a class="dash-row" href="#">
+          <div class="dash-row__sum">
+            <div class="dash-row__cell"><span class="status-dot" style="--dot: var(--ok)"><span class="status-dot__inner"></span></span><span class="dash-row__st">2026-03-28</span></div>
+            <div class="dash-row__cell dash-row__cell--title">
+              <div class="dash-row__title">Outrunning MySQL with gh-ost</div>
+              <div class="dash-row__co">Extending an 8-month runway on a hot-write table.</div>
+            </div>
+            <div class="dash-row__cell">11 min</div>
+            <div class="dash-row__cell" style="flex-wrap: wrap; gap: 4px;"><span class="dash-tag">mysql</span><span class="dash-tag">databases</span></div>
+          </div>
+        </a>
+
+        <a class="dash-row" href="#">
+          <div class="dash-row__sum">
+            <div class="dash-row__cell"><span class="status-dot" style="--dot: var(--ok)"><span class="status-dot__inner"></span></span><span class="dash-row__st">2026-03-12</span></div>
+            <div class="dash-row__cell dash-row__cell--title">
+              <div class="dash-row__title">Claude Code, six months in</div>
+              <div class="dash-row__co">Where it shines, where it slips.</div>
+            </div>
+            <div class="dash-row__cell">8 min</div>
+            <div class="dash-row__cell" style="flex-wrap: wrap; gap: 4px;"><span class="dash-tag">agentic</span><span class="dash-tag">tools</span></div>
+          </div>
+        </a>
+
+        <!-- Link-post row -->
+        <a class="dash-row dash-row--link" href="#" target="_blank" rel="noreferrer">
+          <div class="dash-row__sum">
+            <div class="dash-row__cell"><span class="status-dot" style="--dot: var(--muted-dot)"><span class="status-dot__inner"></span></span><span class="dash-row__st">2026-02-24</span></div>
+            <div class="dash-row__cell dash-row__cell--title"><div class="dash-row__title">Why schema migrations should feel boring</div></div>
+            <div class="dash-row__cell dash-row__host">planetscale.com</div>
+          </div>
+        </a>
+
+        <a class="dash-row" href="#">
+          <div class="dash-row__sum">
+            <div class="dash-row__cell"><span class="status-dot" style="--dot: var(--muted-dot)"><span class="status-dot__inner"></span></span><span class="dash-row__st">2026-01-30</span></div>
+            <div class="dash-row__cell dash-row__cell--title">
+              <div class="dash-row__title">A small note on on-call rituals</div>
+              <div class="dash-row__co">Checklists are a love language.</div>
+            </div>
+            <div class="dash-row__cell">4 min</div>
+            <div class="dash-row__cell" style="flex-wrap: wrap; gap: 4px;"><span class="dash-tag">sre</span><span class="dash-tag">team</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- ── POST ──────────────────────────────────────────────────────── -->
+  <div id="view-post" hidden>
+    <article class="post">
+      <header class="post__header">
+        <div class="post__meta">
+          <span>POST-20260420</span><span>·</span>
+          <time>Apr 20, 2026</time><span>·</span>
+          <span>6 min read</span><span>·</span>
+          <code>#billing</code> <code>#copilot</code> <code>#sre</code>
+        </div>
+        <h1 class="post__title">On watching the billing graph during a launch</h1>
+        <p class="post__subtitle">The first $10M of ARR moves differently than the second. Notes from the day Copilot for Individuals shipped.</p>
+        <div class="post__byline">
+          <span class="status-dot" style="--dot: var(--ok)"><span class="status-dot__inner"></span></span>
+          <span>by <strong>Salvador Fuentes Jr.</strong></span>
+          <span>· from Irvine, CA</span>
+          <span class="post__byline-r"><span>6 min read</span><span>·</span><span>1,240 words</span></span>
+        </div>
+      </header>
+
+      <div class="post__body">
+        <p>Launch days are really two launches — the one you announce and the one you watch. The first is press releases and blog posts. The second is a Datadog dashboard, three teammates on a video call, and a Slack channel that nobody quite knows how to mute.</p>
+
+        <p>When we shipped billing for Copilot for Individuals, the most useful thing in the room wasn't a runbook. It was a chart. One chart, refreshing every few seconds, showing the rate of successful subscription creates against failed ones. Everything else — error budgets, capacity plans, migration status — had already done its job in the days before. On the day, what mattered was whether the green line kept going up and the red line stayed flat.</p>
+
+        <figure class="fullbleed">
+          <div class="figbox">
+            <div class="figbox__hd"><span>subscription.creates · per second</span><span>launch + 00:42:18</span></div>
+            <div class="figbox__val">1,284<small>▲ steady</small></div>
+            <div class="figbox__chart">
+              <svg viewBox="0 0 400 100" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="lg" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.35"/>
+                    <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,90 L20,88 L40,84 L60,82 L80,76 L100,74 L120,68 L140,66 L160,58 L180,55 L200,48 L220,45 L240,38 L260,34 L280,28 L300,24 L320,20 L340,17 L360,14 L380,11 L400,8 L400,100 L0,100 Z" fill="url(#lg)"/>
+                <path d="M0,90 L20,88 L40,84 L60,82 L80,76 L100,74 L120,68 L140,66 L160,58 L180,55 L200,48 L220,45 L240,38 L260,34 L280,28 L300,24 L320,20 L340,17 L360,14 L380,11 L400,8" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="M0,96 L40,97 L80,95 L120,97 L160,96 L200,97 L240,95 L280,96 L320,97 L360,96 L400,97" fill="none" stroke="var(--muted)" stroke-width="1" stroke-dasharray="2 3" opacity="0.6"/>
+              </svg>
+            </div>
+          </div>
+          <figcaption>fig 1 · the one chart that mattered on launch day</figcaption>
+        </figure>
+
+        <h2>What the graph taught me</h2>
+        <p>Three things, in order of how long they took to sink in.</p>
+        <p><strong>First</strong>, a slow graph is a healthy graph. I kept wanting to see a hockey stick. The hockey stick arrived later, and mostly from somewhere else — marketing, a reviewer, a tweet.</p>
+        <p><strong>Second</strong>, the error you're looking for is the one you didn't plan for. We had runbooks for payment-method rejections, currency mismatches, Zuora retries. What we didn't have was a runbook for a small percentage of accounts that had existed long enough to have <em>three</em> expired payment instruments on file from a previous product line.</p>
+
+        <blockquote><p>Every billing bug is eventually a race condition, a legacy code path, or both.</p></blockquote>
+
+        <h2>A quick note on gh-ost</h2>
+        <p>One piece of pre-launch work that paid off immediately: an online schema change via <code>gh-ost</code> on the billing MySQL cluster, combined with a custom reclamation job that outran ingest through the migration window.</p>
+
+        <pre><code><span class="hl-c">$</span> <span class="hl-n">gh-ost</span> \
+  <span class="hl-k">--host</span>=<span class="hl-s">billing-primary.internal</span> \
+  <span class="hl-k">--database</span>=<span class="hl-s">billing</span> \
+  <span class="hl-k">--table</span>=<span class="hl-s">subscriptions</span> \
+  <span class="hl-k">--alter</span>=<span class="hl-s">"ADD COLUMN product_family VARCHAR(<span class="hl-m">32</span>) NULL"</span> \
+  <span class="hl-k">--execute</span></code></pre>
+
+        <hr>
+
+        <h2>What I'd do again</h2>
+        <ul>
+          <li>Have one chart that everyone agrees is <em>the</em> chart.</li>
+          <li>Write the runbook for the thing you think won't happen.</li>
+          <li>Put Growth, Support, Data and Eng on the same call, not different ones.</li>
+          <li>Buy yourself database runway before you need it, not after.</li>
+        </ul>
+        <p>The rest is standard. Breathe, refresh the graph, trust the people you work with.</p>
+      </div>
+
+      <footer class="post__footer">
+        <div class="post__tags">
+          <a class="dash-tag" href="#">#billing</a><a class="dash-tag" href="#">#copilot</a><a class="dash-tag" href="#">#sre</a>
+        </div>
+        <div class="post__sig"><code>$</code> echo "thanks for reading" &gt;&gt; fuentesjr@gmail.com</div>
+        <nav class="post-nav">
+          <a href="#"><div class="post-nav__dir">← previous</div><div class="post-nav__title">Outrunning MySQL with gh-ost</div></a>
+          <a class="post-nav__r" href="#"><div class="post-nav__dir">next →</div><div class="post-nav__title">Claude Code, six months in</div></a>
+        </nav>
+      </footer>
+    </article>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="foot__l"><span class="status-dot"><span class="status-dot__inner"></span></span><span>all systems nominal</span></div>
+  <div class="foot__c">© 2026 Salvador Fuentes Jr. · set in Fraunces &amp; Geist Mono</div>
+  <div class="foot__r"><a href="#">github</a><a href="#">linkedin</a><a href="#">email</a></div>
+</footer>
+
+<!-- Preview switcher -->
+<div class="preview-switcher">
+  <span class="pv-k">preview</span><span class="sep">·</span>
+  <button id="sw-home" class="is-on">home</button>
+  <button id="sw-post">post</button>
+  <span class="sep">·</span>
+  <button id="sw-theme">☀ theme</button>
+  <span class="sep">·</span>
+  <span class="pv-k">density</span>
+  <button data-density="compact">compact</button>
+  <button data-density="comfortable" class="is-on">comfy</button>
+  <button data-density="spacious">spacious</button>
+  <span class="sep">·</span>
+  <button id="sw-dropcap" class="is-on">¶ dropcap</button>
+  <span class="sep">·</span>
+  <label>hue <input type="range" id="sw-hue" min="0" max="360" step="1" value="55"></label>
+  <span class="pv-k" id="hue-read">55°</span>
+</div>
+
+<script>
+(function () {
+  var prog = document.querySelector('.read-progress');
+  var home = document.getElementById('view-home');
+  var post = document.getElementById('view-post');
+  var crumb = document.getElementById('crumb');
+  var swHome = document.getElementById('sw-home');
+  var swPost = document.getElementById('sw-post');
+
+  // ── view switch
+  function show(which) {
+    home.hidden = which !== 'home';
+    post.hidden = which !== 'post';
+    swHome.classList.toggle('is-on', which === 'home');
+    swPost.classList.toggle('is-on', which === 'post');
+    crumb.textContent = which === 'home' ? '/' : '/2026/04/20/billing-graph/';
+    prog.hidden = which !== 'post';
+    window.scrollTo(0, 0);
+  }
+  swHome.onclick = function () { show('home'); };
+  swPost.onclick = function () { show('post'); };
+
+  // ── theme toggle (pref: uptime.preview.theme)
+  function applyTheme(t) {
+    document.documentElement.dataset.theme = t;
+    document.getElementById('theme-btn').textContent = t === 'light' ? '☾' : '☀';
+    try { localStorage.setItem('uptime.preview.theme', t); } catch (_) {}
+  }
+  applyTheme(localStorage.getItem('uptime.preview.theme') || 'dark');
+  function toggleTheme() { applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'); }
+  document.getElementById('sw-theme').onclick = toggleTheme;
+  document.getElementById('theme-btn').onclick = toggleTheme;
+
+  // ── density toggle
+  var aux = document.getElementById('row-aux');
+  function setDensity(d) {
+    document.documentElement.dataset.density = d;
+    document.querySelectorAll('.preview-switcher [data-density]').forEach(function (b) {
+      b.classList.toggle('is-on', b.dataset.density === d);
+    });
+    aux.textContent = '6 entries · ' + d + ' density';
+  }
+  document.querySelectorAll('.preview-switcher [data-density]').forEach(function (b) {
+    b.onclick = function () { setDensity(b.dataset.density); };
+  });
+
+  // ── accent hue slider + ?accent= URL override
+  var hueSlider = document.getElementById('sw-hue');
+  var hueRead = document.getElementById('hue-read');
+  function setHue(h) {
+    document.documentElement.style.setProperty('--accent-hue', h);
+    hueSlider.value = h;
+    hueRead.textContent = h + '°';
+  }
+  var urlHue = new URLSearchParams(location.search).get('accent');
+  setHue(urlHue != null && !isNaN(parseFloat(urlHue)) ? parseFloat(urlHue) : 55);
+  hueSlider.oninput = function () { setHue(hueSlider.value); };
+
+  // ── uptime
+  var el = document.querySelector('[data-uptime-since]');
+  if (el) {
+    var since = new Date(el.dataset.uptimeSince);
+    function tick() {
+      var ms = Date.now() - since.getTime();
+      el.textContent = (ms / (365.25 * 24 * 3600 * 1000)).toFixed(6) + 'y';
+    }
+    tick(); setInterval(tick, 1000);
+  }
+
+  // ── dropcap toggle
+  var dcBtn = document.getElementById('sw-dropcap');
+  var postArticle = document.querySelector('.post');
+  dcBtn.onclick = function () {
+    var turningOff = !postArticle.classList.contains('no-dropcap');
+    postArticle.classList.toggle('no-dropcap', turningOff);
+    dcBtn.classList.toggle('is-on', !turningOff);
+  };
+
+  // ── copy-code buttons
+  document.querySelectorAll('.post__body pre').forEach(function (pre) {
+    if (pre.parentElement.classList.contains('code-wrap')) return;
+    var wrap = document.createElement('div'); wrap.className = 'code-wrap';
+    pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);
+    var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'copy-btn'; btn.textContent = 'copy';
+    wrap.appendChild(btn);
+    btn.onclick = function () {
+      var code = pre.querySelector('code') || pre;
+      navigator.clipboard && navigator.clipboard.writeText(code.innerText);
+      btn.textContent = 'copied'; btn.classList.add('is-done');
+      setTimeout(function () { btn.textContent = 'copy'; btn.classList.remove('is-done'); }, 1400);
+    };
+  });
+
+  // ── left-edge reading progress
+  var body = document.querySelector('.post__body');
+  function progTick() {
+    if (post.hidden) return;
+    var rect = body.getBoundingClientRect();
+    var total = rect.height - window.innerHeight + rect.top + window.scrollY;
+    var read = Math.min(Math.max(window.scrollY - (rect.top + window.scrollY - window.innerHeight * 0.3), 0), total);
+    var pct = total > 0 ? (read / total) * 100 : 0;
+    prog.style.setProperty('--read-pct', Math.min(pct, 100) + '%');
+  }
+  window.addEventListener('scroll', progTick, { passive: true });
+  window.addEventListener('resize', progTick);
+})();
+</script>
+</body>
+</html>

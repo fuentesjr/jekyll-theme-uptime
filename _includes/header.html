@@ -1,0 +1,43 @@
+<header class="dash-top">
+  <a class="dash-top__brand" href="{{ '/' | relative_url }}">
+    <div class="dash-logo">◉</div>
+    <div>
+      <div class="dash-top__name">{{ site.title | default: site.author.name }}</div>
+      <div class="dash-top__sub">
+        <span class="status-dot" style="--dot: var(--ok)"><span class="status-dot__inner"></span></span>
+        <span>{{ site.author.title | default: site.tagline | default: 'writing' }}</span>
+        {% if site.author.location %}
+          <span class="dash-sep">/</span>
+          <span>{{ site.author.location }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </a>
+  <div class="dash-top__right">
+    {% if site.uptime.career_start %}
+      <div class="dash-kv">
+        <span class="dash-kv__k">uptime</span>
+        <span class="dash-kv__v"><span class="uptime" data-uptime-since="{{ site.uptime.career_start }}">…</span></span>
+      </div>
+    {% endif %}
+    {% if site.uptime.region_label %}
+      <div class="dash-kv">
+        <span class="dash-kv__k">region</span>
+        <span class="dash-kv__v">{{ site.uptime.region_label }}</span>
+      </div>
+    {% endif %}
+  </div>
+</header>
+
+<nav class="dash-nav" aria-label="Primary">
+  <div class="dash-nav__links">
+    <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="is-active"{% endif %}>posts</a>
+    <a href="{{ '/archive/' | relative_url }}"{% if page.url contains '/archive' %} class="is-active"{% endif %}>archive</a>
+    <a href="{{ '/tags/' | relative_url }}"{% if page.url contains '/tags' %} class="is-active"{% endif %}>tags</a>
+    <a href="{{ '/about/' | relative_url }}"{% if page.url contains '/about' %} class="is-active"{% endif %}>about</a>
+    <a href="{{ '/feed.xml' | relative_url }}">rss</a>
+  </div>
+  <div class="dash-nav__crumb">
+    services &rsaquo; <code>{{ page.url | default: '/' | replace: '/', ' / ' | strip }}</code>
+  </div>
+</nav>

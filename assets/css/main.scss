@@ -1,0 +1,11 @@
+---
+---
+@charset "utf-8";
+
+/* Inject accent-hue from _config.yml as a CSS custom property on :root,
+   so consumers can retint the theme without touching Sass. */
+:root {
+  --accent-hue: {{ site.uptime.accent_hue | default: 55 }};
+}
+
+@import "uptime";

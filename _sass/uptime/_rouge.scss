@@ -1,0 +1,83 @@
+/* Rouge syntax highlighting — tuned to the uptime palette.
+   Enable in _config.yml:
+     kramdown:
+       syntax_highlighter: rouge
+   Then Rouge emits <div class="highlight"><pre><code><span class="k">def</span>...
+*/
+
+.highlight, .highlighter-rouge {
+  font-family: var(--mono);
+}
+
+.highlight {
+  background: var(--bg-elev);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 0 0 1.15em;
+}
+.highlight pre { margin: 0; padding: 14px 16px; background: transparent; border: 0; border-radius: 0; }
+.highlight code { background: transparent; padding: 0; color: var(--ink); }
+
+/* Syntax colors — a warm, low-chroma palette that matches --accent. */
+.highlight .c,  .highlight .c1, .highlight .cm, .highlight .cs { color: var(--muted); font-style: italic; }                   /* comment */
+.highlight .cp { color: var(--muted); }                                                                                       /* preprocessor */
+.highlight .err { color: var(--warn); }                                                                                       /* error */
+
+.highlight .k,  .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt { color: var(--accent); }      /* keyword */
+.highlight .kc { color: var(--accent-2); }                                                                                    /* constant keyword (true/false/nil) */
+
+.highlight .o,  .highlight .ow { color: var(--ink-2); }                                                                       /* operator */
+.highlight .p                    { color: var(--muted); }                                                                     /* punctuation */
+
+.highlight .n,  .highlight .na, .highlight .nb, .highlight .nc, .highlight .no, .highlight .nd, .highlight .ni,
+.highlight .ne, .highlight .nf, .highlight .nl, .highlight .nn, .highlight .nv, .highlight .nx, .highlight .py,
+.highlight .nt { color: var(--ink); }                                                                                         /* name */
+.highlight .nf, .highlight .nc   { color: oklch(78% 0.10 200); }                                                              /* function / class */
+.highlight .nb                    { color: var(--accent-2); }                                                                 /* builtin */
+.highlight .nt                    { color: var(--accent); }                                                                   /* html/xml tag */
+
+.highlight .s,  .highlight .s1, .highlight .s2, .highlight .sb, .highlight .sc, .highlight .sd,
+.highlight .se, .highlight .sh, .highlight .si, .highlight .sx, .highlight .sr, .highlight .ss { color: oklch(72% 0.10 155); } /* string */
+.highlight .se                    { color: var(--accent); }                                                                   /* string escape */
+
+.highlight .m,  .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo, .highlight .il { color: var(--accent-2); }   /* number */
+
+.highlight .gd                    { color: var(--warn); background: color-mix(in oklch, var(--warn) 10%, transparent); }
+.highlight .gi                    { color: var(--ok);   background: color-mix(in oklch, var(--ok) 10%, transparent); }
+.highlight .gh, .highlight .gu   { color: var(--accent); font-weight: 500; }
+.highlight .gs                    { font-weight: 600; }
+.highlight .ge                    { font-style: italic; }
+
+/* Rouge line-number column (when lineos: true) */
+.highlight .lineno, .highlight .gl {
+  color: var(--muted);
+  opacity: 0.5;
+  user-select: none;
+  padding-right: 12px;
+  border-right: 1px solid var(--hairline);
+  margin-right: 12px;
+}
+
+/* Copy-code button — positioned on the wrapper, injected by site.js */
+.code-wrap { position: relative; }
+.code-wrap .copy-btn {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: var(--bg);
+  border: 1px solid var(--hairline);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+}
+.code-wrap:hover .copy-btn,
+.code-wrap .copy-btn:focus { opacity: 1; }
+.code-wrap .copy-btn:hover { color: var(--ink); border-color: var(--ink-2); }
+.code-wrap .copy-btn.is-done { color: var(--ok); border-color: var(--ok); opacity: 1; }

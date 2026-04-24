@@ -1,0 +1,23 @@
+---
+layout: default
+---
+
+<article class="post">
+  <header class="post__header">
+    <div class="post__meta">
+      <span>PAGE</span>
+      {% if page.updated %}
+        <span>·</span>
+        <span>updated {{ page.updated | date: "%b %-d, %Y" }}</span>
+      {% endif %}
+    </div>
+    <h1 class="post__title">{{ page.title }}</h1>
+    {% if page.subtitle %}
+      <p class="post__subtitle">{{ page.subtitle }}</p>
+    {% endif %}
+  </header>
+
+  <div class="post__body">
+    {{ content }}
+  </div>
+</article>

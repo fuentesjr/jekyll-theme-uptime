@@ -1,0 +1,72 @@
+---
+layout: default
+---
+
+{% assign words = content | number_of_words %}
+<article class="post{% if page.dropcap == false %} no-dropcap{% endif %}">
+  <header class="post__header">
+    <div class="post__meta">
+      <span>POST-{{ page.date | date: "%Y%m%d" }}</span>
+      <span>·</span>
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
+      {% assign mins = page.reading_time | default: words | divided_by: 220 | plus: 1 %}
+      <span>·</span>
+      <span>{{ mins }} min read</span>
+      {% if page.tags.size > 0 %}
+        <span>·</span>
+        {% for tag in page.tags %}
+          <code><a href="{{ '/tags/' | append: tag | append: '/' | relative_url }}" style="text-decoration: none;">#{{ tag }}</a></code>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <h1 class="post__title">{{ page.title }}</h1>
+    {% if page.subtitle %}
+      <p class="post__subtitle">{{ page.subtitle }}</p>
+    {% endif %}
+
+    <div class="post__byline">
+      <span class="status-dot" style="--dot: var(--ok)"><span class="status-dot__inner"></span></span>
+      <span>by <strong>{{ page.author | default: site.author.name }}</strong></span>
+      {% if site.author.location %}<span>· from {{ site.author.location }}</span>{% endif %}
+      <span class="post__byline-r">
+        <span>{{ mins }} min read</span>
+        <span>·</span>
+        <span>{{ words }} words</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="post__body"{% if words < 300 %} data-short{% endif %}>
+    {{ content }}
+  </div>
+
+  <footer class="post__footer">
+    {% if page.tags.size > 0 %}
+      <div class="post__tags">
+        {% for tag in page.tags %}
+          <a class="dash-tag" href="{{ '/tags/' | append: tag | append: '/' | relative_url }}">#{{ tag }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="post__sig">
+      <code>$</code> echo "thanks for reading" &gt;&gt; {{ site.author.email | default: 'you@example.com' }}
+    </div>
+
+    <nav class="post-nav" aria-label="Adjacent posts">
+      {% if page.previous %}
+        <a href="{{ page.previous.url | relative_url }}">
+          <div class="post-nav__dir">← previous</div>
+          <div class="post-nav__title">{{ page.previous.title }}</div>
+        </a>
+      {% else %}<div></div>{% endif %}
+      {% if page.next %}
+        <a class="post-nav__r" href="{{ page.next.url | relative_url }}">
+          <div class="post-nav__dir">next →</div>
+          <div class="post-nav__title">{{ page.next.title }}</div>
+        </a>
+      {% endif %}
+    </nav>
+  </footer>
+</article>

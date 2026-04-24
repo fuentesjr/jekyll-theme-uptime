@@ -1,0 +1,24 @@
+/* Print: strip chrome, black text on white */
+
+@media print {
+  .corner,
+  .cmdk-overlay,
+  .help-overlay,
+  .foot,
+  .read-progress,
+  .post-nav,
+  .dash-top__right,
+  .dash-nav { display: none !important; }
+
+  html, body { background: white; color: black; }
+  html { font-size: 11.5pt; }
+
+  .post { max-width: none; }
+  .post__title { font-size: 28pt; }
+  .post__body { color: black; }
+  .post__body a { color: black; text-decoration-color: #888; }
+  .post__body a::after { content: " (" attr(href) ")"; font-family: var(--mono); font-size: 9pt; color: #555; }
+
+  .dash-top { border-bottom: 1px solid #ccc; }
+  .dash-logo { background: black; color: white; }
+}

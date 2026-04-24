@@ -1,0 +1,38 @@
+---
+layout: default
+permalink: /404.html
+title: 404 — Not Found
+sitemap: false
+---
+
+<section class="err">
+  <div class="err__code">HTTP 404</div>
+  <h1 class="err__title">This route did not resolve.</h1>
+  <p class="err__body">
+    The page you were looking for either moved, was never here, or is quietly on fire somewhere upstream.
+    If you arrived from a link on this site, that is my bug — <a href="mailto:{{ site.author.email | default: 'you@example.com' }}">let me know</a>.
+  </p>
+
+  <pre class="err__trace"><code><span class="hl-c">$</span> curl -sSI {{ site.url }}{{ page.url }}
+<span class="hl-k">HTTP/2</span> <span class="hl-m">404</span>
+<span class="hl-k">content-type</span>: text/html
+<span class="hl-k">x-reason</span>: <span class="hl-s">"route not found"</span>
+<span class="hl-k">x-suggested</span>: <span class="hl-s">"go home"</span></code></pre>
+
+  <div class="err__actions">
+    <a class="dash-link" href="{{ '/' | relative_url }}"><span class="dash-link__k">nav</span><span>home</span><span class="dash-link__arr">↗</span></a>
+    <a class="dash-link" href="{{ '/archive/' | relative_url }}"><span class="dash-link__k">nav</span><span>archive</span><span class="dash-link__arr">↗</span></a>
+    <a class="dash-link" href="{{ '/tags/' | relative_url }}"><span class="dash-link__k">nav</span><span>tags</span><span class="dash-link__arr">↗</span></a>
+    <button class="dash-link" data-action="open-palette" type="button"><span class="dash-link__k">⌘K</span><span>search</span><span class="dash-link__arr">↗</span></button>
+  </div>
+</section>
+
+<style>
+.err { max-width: 62ch; margin: 3rem auto; }
+.err__code { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--warn); margin-bottom: 1rem; }
+.err__title { font-family: var(--serif); font-weight: 500; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.02em; line-height: 1.05; margin: 0 0 1rem; }
+.err__body { font-family: var(--serif); font-size: 1.05rem; line-height: 1.6; color: var(--ink-2); margin: 0 0 1.5rem; }
+.err__trace { background: var(--bg-elev); border: 1px solid var(--hairline); border-radius: 10px; padding: 14px 16px; font-family: var(--mono); font-size: 13px; line-height: 1.55; overflow-x: auto; margin: 0 0 1.5rem; }
+.err__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.err__actions button { cursor: pointer; }
+</style>

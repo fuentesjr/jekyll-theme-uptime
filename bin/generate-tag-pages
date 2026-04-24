@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+# bin/generate-tag-pages
+#
+# Walks _posts/, collects every unique value from front-matter `tags:`, and
+# writes a `_tags/<tag>.md` stub for each one. Run from your site root.
+#
+#   ruby bin/generate-tag-pages
+#
+# The stubs use the theme's `tag` layout, which expects `page.tag` to be set.
+# Stubs already on disk are left alone.
+
+require "yaml"
+require "fileutils"
+
+POSTS_DIR = "_posts"
+OUT_DIR = "_tags"
+FRONTMATTER = /\A---\s*\n(.*?\n?)^---\s*$\n?/m
+
+FileUtils.mkdir_p(OUT_DIR)
+
+tags = []
+Dir[File.join(POSTS_DIR, "**", "*.{md,markdown,html}")].each do |path|
+  content = File.read(path)
+  next unless content =~ FRONTMATTER
+  fm = YAML.safe_load($1, permitted_classes: [Time, Date]) rescue nil
+  next unless fm && fm["tags"]
+  tags.concat(Array(fm["tags"]))
+end
+
+tags = tags.map(&:to_s).map(&:strip).reject(&:empty?).uniq.sort
+
+new_count = 0
+tags.each do |tag|
+  slug = tag.downcase.gsub(/[^a-z0-9]+/, "-").gsub(/^-|-$/, "")
+  out = File.join(OUT_DIR, "#{slug}.md")
+  next if File.exist?(out)
+  File.write(out, <<~MD)
+    ---
+    layout: tag
+    tag: #{tag}
+    title: "##{tag}"
+    permalink: /tags/#{slug}/
+    ---
+  MD
+  new_count += 1
+end
+
+puts "tag stubs: #{tags.size} total, #{new_count} new."

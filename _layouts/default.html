@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'en' }}">
+{% include head.html %}
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  {% if page.layout == 'post' %}<div class="read-progress" aria-hidden="true"></div>{% endif %}
+
+  {% include corner-controls.html %}
+
+  <main class="app" id="main">
+    {% include header.html %}
+
+    {{ content }}
+  </main>
+
+  {% include footer.html %}
+  {% include command-palette.html %}
+
+  <script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
+</body>
+</html>

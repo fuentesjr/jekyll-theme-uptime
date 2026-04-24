@@ -1,0 +1,25 @@
+/* Corner controls — fixed ?, ⌘K, theme toggle buttons */
+
+.corner {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 40;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+.corner button {
+  background: var(--bg-elev);
+  border: 1px solid var(--hairline);
+  color: var(--ink-2);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 0.15s;
+}
+.corner button:hover { border-color: var(--ink-2); }

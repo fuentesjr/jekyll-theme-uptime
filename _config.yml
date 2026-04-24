@@ -1,0 +1,61 @@
+# Theme defaults. Consumers can override any of these in their own _config.yml.
+
+uptime:
+  accent_hue: 55              # warm orange in oklch. Try 155 (moss), 260 (indigo), 340 (rose).
+  default_theme: dark         # dark | light
+  default_density: comfortable # compact | comfortable | spacious
+  show_command_palette: true
+  footer_note: "Built with HTML, serifs, and restraint."
+  # Used for the "uptime" counter in the top bar. ISO 8601 date.
+  career_start: "2010-03-01"
+  region_label: "us-west-1"
+  # Permalink style choices: override `permalink` below with one of:
+  #   /:title/                   → minimalist (twitter.com/USER/status/N style)
+  #   /notes/:title/             → namespaced under /notes
+  #   /:year/:month/:day/:title/ → dated (default, blog-ish)
+  now:
+    body: "Short status line shown above the fold on the home page."
+    tags: []
+
+# Pagination (if consumer adds jekyll-paginate)
+paginate: 10
+paginate_path: "/page:num/"
+
+# Permalinks — match a blog-ish shape
+permalink: /:year/:month/:day/:title/
+
+# Collections — posts by default; consumers can add more.
+
+# Sass
+sass:
+  style: compressed
+  sass_dir: _sass
+
+# Defaults: give every post the right layout
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: page
+
+# Plugin hints (consumers still need them in their own config + Gemfile)
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Exclude theme development files from the generated site
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - jekyll-theme-uptime.gemspec
+  - README.md
+  - LICENSE.txt
+  - vendor/
+  - node_modules/
