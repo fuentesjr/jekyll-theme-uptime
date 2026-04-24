@@ -147,7 +147,7 @@
   gap: 1rem;
 }
 @media (min-width: 900px) {
-  .dash-slis__grid { grid-template-columns: repeat(4, 1fr); }
+  .dash-slis__grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 }
 .dash-sli {
   background: var(--bg-elev);
@@ -347,7 +347,6 @@
   border-radius: 4px;
   white-space: pre;
   overflow: hidden;
-  max-height: 3.4em;
 }
 .dash-sli__log .t { color: var(--ink-2); }
 .dash-sli__log .k { color: var(--ink-2); }

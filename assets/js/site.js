@@ -1,4 +1,5 @@
 ---
+layout: null
 ---
 /* uptime theme — vanilla JS for command palette, keyboard nav, theme/density toggles.
    Exposed as window.__uptime for debugging. */
