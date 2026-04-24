@@ -3,12 +3,17 @@ layout: default
 ---
 
 <section class="dash-hero">
-  <div class="dash-hero__crumb">services &rsaquo; {{ site.title | downcase | replace: ' ', '-' }} &rsaquo; home</div>
+  <div class="dash-hero__crumb">services &rsaquo; {{ site.uptime.hero.crumb | default: 'blog' }} &rsaquo; home</div>
   <h1 class="dash-hero__headline">
-    {{ site.tagline_html | default: site.tagline | default: "Notes from production." }}
+    {% if site.uptime.hero.headline %}
+      {{ site.uptime.hero.headline }}{% if site.uptime.hero.headline_accent %} <span class="dash-hero__accent">{{ site.uptime.hero.headline_accent }}</span>{% endif %}
+    {% else %}
+      {{ site.tagline | default: "Notes from production." }}
+    {% endif %}
   </h1>
-  {% if site.description %}
-    <p class="dash-hero__body">{{ site.description }}</p>
+  {% assign hero_body = site.uptime.hero.body | default: site.description %}
+  {% if hero_body %}
+    <p class="dash-hero__body">{{ hero_body }}</p>
   {% endif %}
   <div class="dash-hero__links">
     {% for link in site.social_links %}
@@ -29,11 +34,12 @@ layout: default
 </aside>
 {% endif %}
 
-{% if site.featured_posts and site.featured_posts.size > 0 %}
+{% assign featured_slugs = site.uptime.featured | default: site.featured %}
+{% if featured_slugs and featured_slugs.size > 0 %}
 <section class="dash-slis">
   <div class="dash-h2"><span>§</span> Featured <span class="dash-h2__aux">(pinned by the author)</span></div>
   <div class="dash-slis__grid">
-    {% for slug in site.featured_posts %}
+    {% for slug in featured_slugs %}
       {% assign fp = site.posts | where: "slug", slug | first %}
       {% if fp %}
         {% assign age_days = site.time | date: '%s' | minus: fp.date | date: '%s' | divided_by: 86400 %}

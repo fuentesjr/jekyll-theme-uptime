@@ -5,9 +5,10 @@
   Params: include post-card.html post=post
 {% endcomment %}
 {% assign p = include.post %}
-{% if p.kind == 'link' and p.external_url %}
-  {% assign host = p.external_url | split: '/' | slice: 2, 1 | first | replace: 'www.', '' %}
-  <a class="dash-row dash-row--link" href="{{ p.external_url }}" target="_blank" rel="noreferrer">
+{% assign ext_url = p.link | default: p.external_url %}
+{% if p.kind == 'link' and ext_url %}
+  {% assign host = p.link_host | default: ext_url | split: '/' | slice: 2, 1 | first | replace: 'www.', '' %}
+  <a class="dash-row dash-row--link" href="{{ ext_url }}" target="_blank" rel="noreferrer">
     <div class="dash-row__sum">
       <div class="dash-row__cell dash-row__cell--status">
         <span class="status-dot" style="--dot: var(--muted-dot)"><span class="status-dot__inner"></span></span>
