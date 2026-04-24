@@ -7,7 +7,11 @@
 {% assign p = include.post %}
 {% assign ext_url = p.link | default: p.external_url %}
 {% if p.kind == 'link' and ext_url %}
-  {% assign host = p.link_host | default: ext_url | split: '/' | slice: 2, 1 | first | replace: 'www.', '' %}
+  {% if p.link_host %}
+    {% assign host = p.link_host %}
+  {% else %}
+    {% assign host = ext_url | split: '/' | slice: 2, 1 | first | replace: 'www.', '' %}
+  {% endif %}
   <a class="dash-row dash-row--link" href="{{ ext_url }}" target="_blank" rel="noreferrer">
     <div class="dash-row__sum">
       <div class="dash-row__cell dash-row__cell--status">

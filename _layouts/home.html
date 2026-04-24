@@ -42,7 +42,9 @@ layout: default
     {% for slug in featured_slugs %}
       {% assign fp = site.posts | where: "slug", slug | first %}
       {% if fp %}
-        {% assign age_days = site.time | date: '%s' | minus: fp.date | date: '%s' | divided_by: 86400 %}
+        {% assign now_s = site.time | date: '%s' | plus: 0 %}
+        {% assign post_s = fp.date | date: '%s' | plus: 0 %}
+        {% assign age_days = now_s | minus: post_s | divided_by: 86400 %}
         {% if age_days < 14 %}{% assign age_label = 'new' %}
         {% elsif age_days < 60 %}{% assign age_label = age_days | append: 'd' %}
         {% elsif age_days < 730 %}{% assign age_label = age_days | divided_by: 30 | append: 'mo' %}
@@ -55,7 +57,26 @@ layout: default
           </div>
           <h3 class="dash-sli__headline">{{ fp.title }}</h3>
           <div class="dash-sli__desc">{{ fp.excerpt | strip_html | truncate: 110 }}</div>
-          <div class="dash-sli__spark" aria-hidden="true" data-spark="{{ spark_seed }}"></div>
+          {% if fp.featured_spark %}
+            <div class="dash-sli__spark" aria-hidden="true" data-spark="{{ spark_seed }}"></div>
+          {% elsif fp.featured_log and fp.featured_log.size > 0 %}
+            <pre class="dash-sli__log" aria-hidden="true">{% for ln in fp.featured_log %}<span class="t">{{ ln.t }}</span> <span class="lv lv-{{ ln.level | default: 'info' | downcase }}">{{ ln.level | default: 'INFO' }}</span> {% if ln.kind %}{{ ln.kind }} {% endif %}{% if ln.k %}<span class="k">{{ ln.k }}=</span>{% endif %}{% if ln.v %}<span class="n">{{ ln.v }}</span>{% endif %}{% unless forloop.last %}
+{% endunless %}{% endfor %}</pre>
+          {% else %}
+            {% assign wc = fp.content | strip_html | number_of_words %}
+            {% assign wc_k = wc | divided_by: 1000 %}
+            {% if wc >= 1000 %}
+              {% assign wc_rem = wc | modulo: 1000 | divided_by: 100 %}
+              {% assign wc_display = wc_k | append: '.' | append: wc_rem | append: 'k' %}
+            {% else %}
+              {% assign wc_display = wc | append: 'w' %}
+            {% endif %}
+            {% if age_days < 1 %}{% assign seen_label = 'today' %}
+            {% elsif age_days < 2 %}{% assign seen_label = '1d ago' %}
+            {% else %}{% assign seen_label = age_days | append: 'd ago' %}{% endif %}
+            <pre class="dash-sli__log" aria-hidden="true"><span class="t">{{ fp.date | date: "%Y-%m-%d %H:%M" }}</span> <span class="lv lv-info">INFO</span> published <span class="k">len=</span><span class="n">{{ wc_display }}</span>
+<span class="t">{{ site.time | date: "%Y-%m-%d %H:%M" }}</span> <span class="lv lv-stat">STAT</span> age <span class="k">seen=</span><span class="n">{{ seen_label }}</span></pre>
+          {% endif %}
         </a>
       {% endif %}
     {% endfor %}

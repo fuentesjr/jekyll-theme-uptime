@@ -153,10 +153,14 @@
     if (!el) return;
     var since = new Date(el.dataset.uptimeSince);
     if (isNaN(since)) return;
+    function pad(n) { return n < 10 ? "0" + n : "" + n; }
     function tick() {
-      var ms = Date.now() - since.getTime();
-      var years = (ms / (365.25 * 24 * 3600 * 1000)).toFixed(6);
-      el.textContent = years + "y";
+      var s = Math.max(0, Math.floor((Date.now() - since.getTime()) / 1000));
+      var y = Math.floor(s / (365.25 * 86400)); s -= Math.floor(y * 365.25 * 86400);
+      var d = Math.floor(s / 86400);            s -= d * 86400;
+      var h = Math.floor(s / 3600);             s -= h * 3600;
+      var m = Math.floor(s / 60);               s -= m * 60;
+      el.textContent = y + "y " + pad(d) + "d " + pad(h) + ":" + pad(m) + ":" + pad(s);
     }
     tick();
     setInterval(tick, 1000);
@@ -175,9 +179,14 @@
 
       // Load actions from embedded JSON + built-ins
       var data = document.getElementById("cmdk-data");
-      var posts = [];
+      var posts = [], tags = [];
       if (data) {
-        try { posts = JSON.parse(data.textContent) || []; } catch (_) {}
+        try {
+          var parsed = JSON.parse(data.textContent) || {};
+          // Backwards compatible: old format was a bare array of posts.
+          if (Array.isArray(parsed)) { posts = parsed; }
+          else { posts = parsed.posts || []; tags = parsed.tags || []; }
+        } catch (_) {}
       }
 
       this.actions = [
