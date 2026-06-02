@@ -9,7 +9,30 @@ layout: default
       <span>POST-{{ page.date | date: "%Y%m%d" }}</span>
       <span>·</span>
       <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
-      {% assign mins = page.reading_time | default: words | divided_by: 220 | plus: 1 %}
+      {% comment %}
+        Reading time, in minutes (shown in the meta line and the byline below).
+
+        `words` (assigned at the top of this file) = number_of_words of the
+        rendered post body.
+
+        WPM = 238 — the average adult silent-reading rate for English
+        *non-fiction*, from Brysbaert (2019), "How many words do we read per
+        minute? A review and meta-analysis of reading rate" (Journal of Memory
+        and Language; 190 studies, 18,573 participants). Fiction averages
+        ~260 wpm; we use the non-fiction figure because the posts here are prose.
+        The older, widely-cited 300 wpm is an overestimate per that meta-analysis.
+
+        `words / 238` gives raw minutes; `ceil` rounds a partial minute up, so a
+        1.2-minute read shows as "2 min" and a sub-minute post never shows "0".
+        (238.0 forces float division — Liquid's divided_by floors when both
+        operands are integers, which would wrongly drop the fractional minute.)
+
+        A post may override this estimate with `reading_time:` in its front
+        matter, expressed in MINUTES — when present it is used verbatim.
+      {% endcomment %}
+      {% assign computed = words | divided_by: 238.0 | ceil %}
+      {% if computed < 1 %}{% assign computed = 1 %}{% endif %}
+      {% assign mins = page.reading_time | default: computed %}
       <span>·</span>
       <span>{{ mins }} min read</span>
       {% if page.tags.size > 0 %}
