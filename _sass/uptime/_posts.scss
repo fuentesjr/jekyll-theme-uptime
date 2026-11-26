@@ -1,4 +1,4 @@
-/* Single-post prose. Fraunces body, Geist Mono for headings & meta. */
+/* Single-post prose. Source Serif 4 body, Fraunces title, Geist Mono for headings & meta. */
 
 .post {
   max-width: var(--post-measure, 68ch);
@@ -69,7 +69,7 @@ html[data-density="spacious"]     { --post-measure: 72ch; }
 
 /* Prose body (applied to content rendered from markdown) */
 .post__body {
-  font-family: var(--serif);
+  font-family: var(--text-serif);
   font-size: 1.075rem;
   line-height: 1.65;
   color: var(--ink);

@@ -1,6 +1,6 @@
 # jekyll-theme-uptime
 
-A Jekyll theme adapted from Salvador Fuentes Jr.'s personal site. A "platform / SRE dashboard" aesthetic applied to blog writing — warm orange accent, Fraunces serif for prose, Geist & Geist Mono for UI, dark-first with a light mode, and a `⌘K` command palette for navigation.
+A Jekyll theme adapted from Salvador Fuentes Jr.'s personal site. A "platform / SRE dashboard" aesthetic applied to blog writing — warm orange accent, Fraunces for headlines, Source Serif 4 for prose, Geist & Geist Mono for UI, dark-first with a light mode, and a `⌘K` command palette for navigation.
 
 ![theme preview](preview.png)
 
@@ -109,7 +109,7 @@ Publishing to RubyGems is documented on [jekyllrb.com](https://jekyllrb.com/docs
 _layouts/
   default.html   — masthead + corner buttons + footer + palette shell
   home.html      — post list, rendered as the "services table" from the dashboard variant
-  post.html      — single post, Fraunces body, §-labelled section headers
+  post.html      — single post, Source Serif 4 body, §-labelled section headers
   page.html      — about / standalone pages
   tag.html       — one page per tag, filtered post list
 
@@ -149,7 +149,7 @@ jekyll-theme-uptime.gemspec
 - **Home page** renders your posts as rows in the "services" table — each post expands to reveal its excerpt. A "now" status banner sits above the fold to surface `site.uptime.now.body`.
 - **Featured tiles** with a serif headline, age badge (`new` / `17d` / `3mo` / `1y`), and a stable per-post sparkline — distinct from the row list.
 - **Link posts** — add `kind: link` + `external_url:` front matter for a compact row with an external-arrow affordance and host badge.
-- **Single-post layout** uses Fraunces for body prose with Geist Mono for headings, meta, and code. Drop-capped first paragraph (opt out with `dropcap: false`, auto-skipped under 300 words), §-labelled section headers, read-time + word-count in the byline.
+- **Single-post layout** uses a Fraunces title and Source Serif 4 for body prose with Geist Mono for headings, meta, and code. Drop-capped first paragraph (opt out with `dropcap: false`, auto-skipped under 300 words), §-labelled section headers, read-time + word-count in the byline.
 - **Rouge syntax highlighting** theme tuned to the palette — re-tints when you change `accent_hue`.
 - **Copy-code** button revealed on hover of every `<pre>` in post bodies.
 - **Full-bleed figures** — wrap `<figure class="fullbleed">` to break out of the reading measure up to the app width.
